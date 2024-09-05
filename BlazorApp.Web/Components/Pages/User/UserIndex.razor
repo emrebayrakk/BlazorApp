@@ -1,0 +1,38 @@
+﻿@page "/users"
+<h3>UserIndex</h3>
+
+@if (UserResponses == null)
+{
+    <p>Loadings.....</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">FirstName</th>
+                <th scope="col">LastName</th>
+                <th scope="col">Email</th>
+                <th scope="col">Password</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in UserResponses)
+            {
+               <tr>
+                    <td scope="row">@user.Id</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Password</td>
+                    <td>
+                        <a class="btn btn-secondary small">Update</a>
+                        <button class="btn btn-danger small">Delete</button>
+                    </td>
+               </tr> 
+            }
+        </tbody>
+    </table>
+}
