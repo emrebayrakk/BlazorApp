@@ -26,27 +26,21 @@ namespace BlazorApp.ApiService.Controllers
         #endregion
 
         [HttpGet("List")]
-        [ProducesResponseType(typeof(ApiResponse<List<UserResponse>>), StatusCodes.Status200OK)]
-        public ApiResponse<List<UserResponse>> UserList()
+        public async Task<ApiResponse<List<UserResponse>>> UserList()
         {
-            return _userService.UserList();
+            return await _userService.UserList();
         }
 
-        [Authorize]
         [HttpGet("Get")]
-        [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
-        public ApiResponse<UserResponse> GetUser(long id)
+        public async Task<ApiResponse<UserResponse>> GetUser(long id)
         {
-            return _userService.GetUser(id);
+            return await _userService.GetUser(id);
         }
 
-        [Authorize]
         [HttpPost("Create")]
-        [ProducesResponseType(typeof(ApiResponse<long>), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ApiResponse<long>), StatusCodes.Status404NotFound)]
-        public ApiResponse<long> Create([FromBody] UserRequest user)
+        public async Task<ApiResponse<long>> Create([FromBody] UserRequest user)
         {
-            var response = _userService.Create(user);
+            var response = await _userService.Create(user);
             return response;
         }
     }

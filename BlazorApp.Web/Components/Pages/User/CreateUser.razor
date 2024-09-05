@@ -1,0 +1,34 @@
+﻿@page "/users/create"
+@rendermode InteractiveServer
+
+<EditForm Model="UserRequest" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container">
+        <div class="row-mb-3">
+            <div class="col-md-6">
+                <label>First Name</label>
+                <InputText class="form-control" @bind-Value="UserRequest.FirstName" />
+                <ValidationMessage For="@(() => UserRequest.FirstName)" />
+            </div>
+            <div class="col-md-6">
+                <label>Last Name</label>
+                <InputText class="form-control" @bind-Value="UserRequest.LastName" />
+                <ValidationMessage For="@(() => UserRequest.LastName)" />
+            </div>
+            <div class="col-md-6">
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="UserRequest.Email" />
+                <ValidationMessage For="@(() => UserRequest.Email)" />
+            </div>
+            <div class="col-md-6">
+                <label>Password</label>
+                <InputText class="form-control" @bind-Value="UserRequest.Password" />
+                <ValidationMessage For="@(() => UserRequest.Password)" />
+            </div>
+        </div>
+        <button class="btn btn-secondary" type="submit">Save</button>
+    </div>
+</EditForm>
+

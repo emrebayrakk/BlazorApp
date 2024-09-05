@@ -17,13 +17,13 @@ namespace BlazorApp.Data.Repositories
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
-        public int Add(TEntityInput entity)
+        public Task<int> Add(TEntityInput entity)
         {
             try
             {
                 var mappedEntity = _mapper.Map<TEntity>(entity);
-                this.entity.Add(mappedEntity);
-                return dbContext.SaveChanges();
+                this.entity.AddAsync(mappedEntity);
+                return dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -33,7 +33,7 @@ namespace BlazorApp.Data.Repositories
 
         }
 
-        public int Delete(long id)
+        public async Task<int> Delete(long id)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace BlazorApp.Data.Repositories
                 if (entity is not null)
                 {
                     this.entity.Remove(entity);
-                    return dbContext.SaveChanges();
+                    return await dbContext.SaveChangesAsync();
                 }
                 return -1;
             }
@@ -53,7 +53,7 @@ namespace BlazorApp.Data.Repositories
 
         }
 
-        public TEntityOutput FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
+        public async Task<TEntityOutput> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
             try
             {
@@ -67,8 +67,8 @@ namespace BlazorApp.Data.Repositories
                 if (noTracking)
                     query = query.AsNoTracking();
 
-                var entities = query.FirstOrDefaultAsync();
-                var mapperEntity = _mapper.Map<TEntityOutput>(entities.Result);
+                var entities = await query.FirstOrDefaultAsync();
+                var mapperEntity = _mapper.Map<TEntityOutput>(entities);
                 return mapperEntity;
             }
             catch (Exception ex)
@@ -78,7 +78,7 @@ namespace BlazorApp.Data.Repositories
             }
 
         }
-        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
+        public async Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> predicate, bool noTracking = true, params Expression<Func<TEntity, object>>[] includes)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace BlazorApp.Data.Repositories
                 if (noTracking)
                     query = query.AsNoTracking();
 
-                var entities = query.FirstOrDefault();
+                var entities = await query.FirstOrDefaultAsync();
                 return entities;
             }
             catch (Exception ex)
@@ -103,17 +103,17 @@ namespace BlazorApp.Data.Repositories
 
         }
 
-        public List<TEntityOutput> GetAll(bool noTracking = true)
+        public async Task<List<TEntityOutput>> GetAll(bool noTracking = true)
         {
             try
             {
                 if (noTracking)
                 {
-                    var mapped = entity.AsNoTracking().ToList();
+                    var mapped = await entity.AsNoTracking().ToListAsync();
                     var entities = _mapper.Map<List<TEntityOutput>>(mapped);
                     return entities;
                 }
-                var result = entity.ToList();
+                var result = await entity.ToListAsync();
                 var mappedResult = _mapper.Map<List<TEntityOutput>>(result);
 
                 return mappedResult;
@@ -126,14 +126,14 @@ namespace BlazorApp.Data.Repositories
 
         }
 
-        public int Update(TEntity entity)
+        public Task<int> Update(TEntity entity)
         {
             try
             {
                 this.entity.Attach(entity);
                 dbContext.Entry(entity).State = EntityState.Modified;
 
-                return dbContext.SaveChanges();
+                return dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {

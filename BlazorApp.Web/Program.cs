@@ -1,5 +1,6 @@
 using BlazorApp.Web;
 using BlazorApp.Web.Components;
+using Blazored.Toast;
 
 var builder = WebApplication.CreateBuilder(args);
 
