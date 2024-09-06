@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BlazorApp.Application.Services.User;
+using BlazorApp.Domain.Entities;
 using BlazorApp.Domain.Requests;
 using BlazorApp.Domain.Responses;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorApp.ApiService.Controllers
@@ -31,16 +31,28 @@ namespace BlazorApp.ApiService.Controllers
             return await _userService.UserList();
         }
 
-        [HttpGet("Get")]
+        [HttpGet("{id}")]
         public async Task<ApiResponse<UserResponse>> GetUser(long id)
         {
             return await _userService.GetUser(id);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ApiResponse<long>> DeleteUser(long id)
+        {
+            return await _userService.DeleteUser(id);
         }
 
         [HttpPost("Create")]
         public async Task<ApiResponse<long>> Create([FromBody] UserRequest user)
         {
             var response = await _userService.Create(user);
+            return response;
+        }
+        [HttpPut("Update")]
+        public async Task<ApiResponse<long>> Update([FromBody] User user)
+        {
+            var response = await _userService.Update(user);
             return response;
         }
     }

@@ -1,42 +1,68 @@
-﻿@page "/users"
-<h3>UserIndex</h3>
+﻿@page "/usr"
+@using BlazorApp.Domain.Responses
+ <div class="d-flex justify-content-center">
+    <h3>Users</h3>
+</div>
 
 @if (UserResponses == null)
 {
-    <p>Loadings.....</p>
+    <div class="d-flex justify-content-center">
+        <Spinner Class="me-3" Type="SpinnerType.Dots" Color="SpinnerColor.Success" Size="SpinnerSize.Large" />
+    </div>
 }
 else
 {
     <hr />
-    <a class="btn btn-outline-primary" href="/users/create">Create</a>
+    <a class="btn btn-outline-primary" href="/usr/create">Create</a>
     <hr />
     <br />
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">FirstName</th>
-                <th scope="col">LastName</th>
-                <th scope="col">Email</th>
-                <th scope="col">Password</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in UserResponses)
-            {
-               <tr>
-                    <td scope="row">@user.Id</td>
-                    <td>@user.FirstName</td>
-                    <td>@user.LastName</td>
-                    <td>@user.Email</td>
-                    <td>@user.Password</td>
-                    <td>
-                        <a class="btn btn-secondary small">Update</a>
-                        <button class="btn btn-danger small">Delete</button>
-                    </td>
-               </tr> 
-            }
-        </tbody>
-    </table>
+    <Grid TItem="UserResponse"
+          AllowPaging="true"
+          AllowSorting="true"
+          Class="table table-hover"
+          DataProvider="EmployeesDataProvider"
+          FiltersRowCssClass="bg-dark text-white bg-opacity-25 border-bottom-0"
+          AllowFiltering="true"
+          Responsive="true"
+          HeaderRowCssClass="bg-dark text-white border-bottom-0"
+          PageSize="10"
+          PageSizeSelectorVisible="true"
+          PageSizeSelectorItems="@(new int[] { 5,10,20 })"
+          PaginationItemsTextFormat="{0} - {1} to {2}"
+          ItemsPerPageText="Items Per Page Text">
+
+        <GridColumns>
+            <GridColumn TItem="UserResponse" HeaderText="Id" PropertyName="Id">
+                @context.Id
+            </GridColumn>
+            <GridColumn TItem="UserResponse" HeaderText="FirstName" PropertyName="FirstName">
+                @context.FirstName
+            </GridColumn>
+            <GridColumn TItem="UserResponse" HeaderText="LastName" PropertyName="LastName">
+                @context.LastName
+            </GridColumn>
+            <GridColumn TItem="UserResponse" HeaderText="Email" PropertyName="Email">
+                @context.Email
+            </GridColumn>
+            <GridColumn TItem="UserResponse" HeaderText="Password" PropertyName="Password">
+                @context.Password
+            </GridColumn>
+            <GridColumn TItem="UserResponse" HeaderText="Actions" PropertyName="Actions">
+                <a class="btn btn-secondary small" href="/usr/update/@context.Id">Update</a>
+                @* update <button class="btn btn-danger small" @onclick="() => { DeletedId = context.Id; OnShowModalClick }">Delete</button> *@
+            </GridColumn>
+        </GridColumns>
+
+    </Grid>
+
+    <Modal @ref="modal" Title="Modal title">
+        <BodyTemplate>
+            Are you Delete?
+        </BodyTemplate>
+        <FooterTemplate>
+            <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+            <Button Color="ButtonColor.Primary" @onclick="HandleDelete">Yes</Button>
+        </FooterTemplate>
+    </Modal>
+   
 }

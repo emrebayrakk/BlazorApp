@@ -21,6 +21,14 @@ namespace BlazorApp.Application.Services.User
             return new ApiResponse<long>(false, ResultCode.Instance.Failed, "ErrorOccured", -1);
         }
 
+        public async Task<ApiResponse<long>> DeleteUser(long id)
+        {
+            long res = await _userRepo.Delete(id);
+            if (res != -1)
+                return new ApiResponse<long>(true, ResultCode.Instance.Ok, "Success", res);
+            return new ApiResponse<long>(false, ResultCode.Instance.Failed, "ErrorOccured", -1);
+        }
+
         public async Task<ApiResponse<UserResponse>> GetUser(long id)
         {
             var result = await _userRepo.FirstOrDefaultAsync(x => x.Id == id);
@@ -36,6 +44,14 @@ namespace BlazorApp.Application.Services.User
             }
             return new ApiResponse<string>(false, ResultCode.Instance.LoginInvalid, "LoginInvalid", "");
 
+        }
+
+        public async Task<ApiResponse<long>> Update(Domain.Entities.User userInput)
+        {
+            long id = await _userRepo.Update(userInput);
+            if (id != -1)
+                return new ApiResponse<long>(true, ResultCode.Instance.Ok, "Success", id);
+            return new ApiResponse<long>(false, ResultCode.Instance.Failed, "ErrorOccured", -1);
         }
 
         public async Task<ApiResponse<List<UserResponse>>> UserList()

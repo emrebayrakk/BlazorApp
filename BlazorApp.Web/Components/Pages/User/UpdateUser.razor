@@ -1,0 +1,33 @@
+﻿@page "/usr/update/{Id:long}"
+
+<h3>UpdateUser</h3>
+<EditForm Model="UserResponse" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container">
+        <div class="row-mb-3">
+            <div class="col-md-6">
+                <label>First Name</label>
+                <InputText class="form-control" @bind-Value="UserResponse.FirstName" />
+                <ValidationMessage For="@(() => UserResponse.FirstName)" />
+            </div>
+            <div class="col-md-6">
+                <label>Last Name</label>
+                <InputText class="form-control" @bind-Value="UserResponse.LastName" />
+                <ValidationMessage For="@(() => UserResponse.LastName)" />
+            </div>
+            <div class="col-md-6">
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="UserResponse.Email" />
+                <ValidationMessage For="@(() => UserResponse.Email)" />
+            </div>
+            <div class="col-md-6">
+                <label>Password</label>
+                <InputText class="form-control" @bind-Value="UserResponse.Password" />
+                <ValidationMessage For="@(() => UserResponse.Password)" />
+            </div>
+        </div>
+        <button class="btn btn-secondary" type="submit">Save</button>
+    </div>
+</EditForm>
