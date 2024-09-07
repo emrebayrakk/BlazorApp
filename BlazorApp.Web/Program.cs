@@ -1,5 +1,7 @@
 using BlazorApp.Web;
+using BlazorApp.Web.Authentication;
 using BlazorApp.Web.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,11 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddBlazorBootstrap();
 
+builder.Services.AddAuthentication();
+builder.Services.AddCascadingAuthenticationState();
+
 builder.Services.AddOutputCache();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 builder.Services.AddHttpClient<ApiClient>(client =>
     {
@@ -34,6 +40,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseOutputCache();
 

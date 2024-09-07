@@ -50,7 +50,7 @@ else
             </GridColumn>
             <GridColumn TItem="UserResponse" HeaderText="Actions" PropertyName="Actions">
                 <a class="btn btn-secondary small" href="/usr/update/@context.Id">Update</a>
-                <button class="btn btn-danger small" @onclick="() => {DeletedId = context.Id; OnShowModalClick();}">Delete</button>
+                <button class="btn btn-danger small" @onclick="() => {User = context; OnShowModalClick();}">Delete</button>
             </GridColumn>
         </GridColumns>
 
@@ -58,7 +58,7 @@ else
 
     <Modal @ref="modal" Title="Modal title">
         <BodyTemplate>
-            Are you Delete?
+            Are you Delete @User.FirstName @User.LastName?
         </BodyTemplate>
         <FooterTemplate>
             <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>

@@ -10,7 +10,7 @@ namespace BlazorApp.Web.Components.Pages.User
         public ApiClient ApiClient { get; set; }
         public IEnumerable<UserResponse> UserResponses {  get; set; }
         private Modal modal { get; set; }
-        public long DeletedId { get; set; }
+        public UserResponse User { get; set; }
         [Inject] 
         protected ToastService ToastService { get; set; } = default!;
 
@@ -44,7 +44,7 @@ namespace BlazorApp.Web.Components.Pages.User
         }
         protected async Task HandleDelete()
         {
-            var res = await ApiClient.DeleteAsync<ApiResponse<long>>($"/api/User/{DeletedId}");
+            var res = await ApiClient.DeleteAsync<ApiResponse<long>>($"/api/User/{User.Id}");
             if (res.Data == 0 || res.Data == -1)
             {
                 //toastr
@@ -65,7 +65,7 @@ namespace BlazorApp.Web.Components.Pages.User
                     Type = ToastType.Success,
                     Title = "Succesfull!",
                     HelpText = $"{DateTime.Now}",
-                    Message = "Deleted User!",
+                    Message = $"Deleted User {User.FirstName} {User.LastName}",
                 };
                 ToastService.Notify(message);
                 await modal?.HideAsync();

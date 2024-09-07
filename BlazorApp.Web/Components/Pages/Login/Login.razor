@@ -1,0 +1,39 @@
+﻿@page "/Login"
+@using BlazorApp.Domain.Requests
+@using BlazorApp.Domain.Responses
+@using BlazorApp.Web.Authentication
+@using BlazorApp.Web.Components.Layout
+@using Microsoft.AspNetCore.Components.Authorization
+@layout EmptyLayout
+@inject ApiClient ApiClient
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+
+<div class="p-5">
+    <EditForm Model="loginRequest" FormName="Login" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <InputText id="email" class="form-control" @bind-Value="loginRequest.Email"></InputText>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText id="password" class="form-control" @bind-Value="loginRequest.Password"></InputText>
+        </div>
+        <Button Type="ButtonType.Submit" Class="btn btn-primary mt3">Login</Button>
+    </EditForm>
+</div>
+
+
+@code {
+    private UserLoginRequest loginRequest = new UserLoginRequest();
+    private async Task HandleLogin()
+    {
+        var res = await ApiClient.PostAsync<ApiResponse<UserLoginResponse>, UserLoginRequest>("/api/auth", loginRequest);
+        if (res != null && res.Data != null)
+        {
+            await ((CustomAuthStateProvider)AuthStateProvider).MarkUserAsAuthenticated(res.Data.Token);
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
