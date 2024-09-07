@@ -10,8 +10,12 @@ namespace BlazorApp.Web.Components.Pages.User
         public ApiClient ApiClient { get; set; }
         public IEnumerable<UserResponse> UserResponses {  get; set; }
         private Modal modal { get; set; }
-        public int DeletedId { get; set; }
-        [Inject] protected ToastService ToastService { get; set; } = default!;
+        public long DeletedId { get; set; }
+        [Inject] 
+        protected ToastService ToastService { get; set; } = default!;
+
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -29,12 +33,12 @@ namespace BlazorApp.Web.Components.Pages.User
         {
             return await Task.FromResult(request.ApplyTo(UserResponses));
         }
-        private async Task OnShowModalClick()
+        protected async Task OnShowModalClick()
         {
             await modal?.ShowAsync();
         }
 
-        private async Task OnHideModalClick()
+        protected async Task OnHideModalClick()
         {
             await modal?.HideAsync();
         }
@@ -64,8 +68,8 @@ namespace BlazorApp.Web.Components.Pages.User
                     Message = "Deleted User!",
                 };
                 ToastService.Notify(message);
-                await LoadUsers();
                 await modal?.HideAsync();
+                NavigationManager.NavigateTo("/usr");
             }
         }
 
